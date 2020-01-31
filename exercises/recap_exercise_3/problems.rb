@@ -117,7 +117,7 @@ end
 def vowel_rotate(str)
   vowels = ['a','e','i','o','u']
   str.each_char do |char|
-    
+  end
 end
 
 p vowel_rotate('computer')      # => "cempotur"
