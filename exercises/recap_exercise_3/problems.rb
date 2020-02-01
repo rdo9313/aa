@@ -116,12 +116,93 @@ end
 
 def vowel_rotate(str)
   vowels = ['a','e','i','o','u']
+  array = []
   str.each_char do |char|
+    array << char if vowels.include?(char)
+  end
+  array = [array[-1]] + array.slice(0,array.length-1)
+  str.each_char.with_index do |char, idx|
+    str[idx] = array.shift if vowels.include?(char)
+  end
+  str
+end
+
+# p vowel_rotate('computer')      # => "cempotur"
+# p vowel_rotate('oranges')       # => "erongas"
+# p vowel_rotate('headphones')    # => "heedphanos"
+# p vowel_rotate('bootcamp')      # => "baotcomp"
+# p vowel_rotate('awesome')       # => "ewasemo"
+
+class String
+  def select(&prc)
+    result = ''
+    if prc.nil?
+      result
+    else
+      self.each_char do |char|
+        result += char if prc.call(char)
+      end
+    end
+    result
+  end
+
+  def map!(&prc)
+    self.each_char.with_index do |char,idx|
+      self[idx] = prc.call(char, idx)
+    end
+  end
+end
+# p "app academy".select { |ch| !"aeiou".include?(ch) }   # => "pp cdmy"
+# p "HELLOworld".select { |ch| ch == ch.upcase }          # => "HELLO"
+# p "HELLOworld".select          # => ""
+
+def multiply(a,b)
+  return 0 if b == 0
+  if b < 0
+    -(a + multiply(a, (-b) - 1))
+  else
+    a + multiply(a, b - 1)
   end
 end
 
-p vowel_rotate('computer')      # => "cempotur"
-p vowel_rotate('oranges')       # => "erongas"
-p vowel_rotate('headphones')    # => "heedphanos"
-p vowel_rotate('bootcamp')      # => "baotcomp"
-p vowel_rotate('awesome')       # => "ewasemo"
+# p multiply(3, 5)        # => 15
+# p multiply(5, 3)        # => 15
+# p multiply(2, 4)        # => 8
+# p multiply(0, 10)       # => 0
+# p multiply(-3, -6)      # => 18
+# p multiply(3, -6)       # => -18
+# p multiply(-3, 6)       # => -18
+
+def lucas_sequence(num)
+  return [] if num == 0
+  return [2] if num == 1
+  return [2,1] if num == 2
+  prev = lucas_sequence(num-1)
+  el = prev[-1] + prev[-2]
+  prev << el
+end
+
+# p lucas_sequence(0)   # => []
+# p lucas_sequence(1)   # => [2]    
+# p lucas_sequence(2)   # => [2, 1]
+# p lucas_sequence(3)   # => [2, 1, 3]
+# p lucas_sequence(6)   # => [2, 1, 3, 4, 7, 11]
+# p lucas_sequence(8)   # => [2, 1, 3, 4, 7, 11, 18, 29]
+
+def prime_factorization(num)
+  (2...num).each do |fact|
+    if num % fact == 0
+      other_fact = num / fact
+      return [ *prime_factorization(fact), *prime_factorization(other_fact) ]
+    end
+  end
+  [ num ]
+end
+
+p prime_factorization(12)     # => [2, 2, 3]
+p prime_factorization(24)     # => [2, 2, 2, 3]
+p prime_factorization(25)     # => [5, 5]
+p prime_factorization(60)     # => [2, 2, 3, 5]
+p prime_factorization(7)      # => [7]
+p prime_factorization(11)     # => [11]
+p prime_factorization(2017)   # => [2017]
