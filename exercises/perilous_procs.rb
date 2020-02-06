@@ -101,3 +101,19 @@ def proc_suffix(sent, hash)
   end
   result.join(' ')
 end
+
+def proctition_platinum(array, *prcs)
+  hash = {}
+  (1..prcs.size).each do |i|
+    hash[i] = []
+  end
+  array.each do |el|
+    prcs.each_with_index do |prc, idx|
+      if prc.call(el)
+        hash[idx+1] << el
+        break
+      end
+    end
+  end
+  hash
+end
