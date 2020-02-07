@@ -117,3 +117,31 @@ def proctition_platinum(array, *prcs)
   end
   hash
 end
+
+def procipher(sentence, cipher)
+    words = sentence.split(' ')
+    new_words = words.map do |word|
+        new_word = word
+        cipher.each do |checker, changer|
+            new_word = changer.call(new_word) if checker.call(word)
+        end
+        new_word
+    end
+    new_words.join(' ')
+end
+
+def picky_procipher(sentence, cipher)
+    words = sentence.split(' ')
+    new_words = words.map do |word|
+        key_procs = cipher.keys
+        matches = key_procs.select { |prc| prc.call(word) }
+        if matches.length >= 1
+            key_proc = matches.first
+            value_proc = cipher[key_proc]
+            value_proc.call(word)
+        else
+            word
+        end
+    end
+    new_words.join(' ')
+end
